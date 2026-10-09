@@ -1,4 +1,10 @@
 import type { DataSourceOptions } from 'typeorm';
+import { AuditLog } from '../audit/audit-log.entity.js';
+import { Registration } from '../registrations/registration.entity.js';
+import { User } from '../users/user.entity.js';
+import { Workshop } from '../workshops/workshop.entity.js';
+
+export const entities = [User, Workshop, Registration, AuditLog];
 
 export const buildDataSourceOptions = (
   env: NodeJS.ProcessEnv,
@@ -9,7 +15,6 @@ export const buildDataSourceOptions = (
   username: env.DB_USERNAME,
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
-  entities: [`${import.meta.dirname}/../**/*.entity.{ts,js}`],
-  migrations: [`${import.meta.dirname}/../database/migrations/*.{ts,js}`],
+  entities,
   synchronize: false,
 });

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { buildDataSourceOptions } from './app-config/database.config.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { UsersModule } from './users/users.module.js';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AppService } from './app.service.js';
         autoLoadEntities: true,
       }),
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
