@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import {
   Alert,
   Badge,
@@ -261,7 +261,7 @@ export function WorkshopsPage() {
                     </Text>
                   </Table.Td>
                   <Table.Td>
-                    <Text size="sm" fw={500}>
+                    <Text component={Link} to={`/workshops/${w.id}`} size="sm" fw={500} c="blue" className="hover:underline">
                       {w.title}
                     </Text>
                   </Table.Td>

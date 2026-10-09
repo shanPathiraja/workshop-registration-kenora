@@ -8,6 +8,7 @@ import { useAuth } from './hooks/useAuth'
 import { LoginPage } from './pages/LoginPage'
 import { ActivityPage } from './pages/ActivityPage'
 import { UsersPage } from './pages/UsersPage'
+import { WorkshopDetailPage } from './pages/WorkshopDetailPage'
 import { WorkshopsPage } from './pages/WorkshopsPage'
 
 function HomeRedirect() {
@@ -27,6 +28,7 @@ function App() {
           </Route>
           <Route element={<RequireRole roles={['manager', 'staff']} />}>
             <Route path="workshops" element={<WorkshopsPage />} />
+            <Route path="workshops/:id" element={<WorkshopDetailPage />} />
           </Route>
           <Route element={<RequireRole roles={['admin', 'manager']} />}>
             <Route path="activity" element={<ActivityPage />} />

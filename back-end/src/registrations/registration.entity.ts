@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -17,6 +18,11 @@ export enum RegistrationStatus {
 
 /** Rows are never deleted: cancelling only changes the status. */
 @Entity('registrations')
+// One live registration per email per workshop (emails are stored lowercase).
+@Index('registrations_live_email_uq', ['workshopId', 'attendeeEmail'], {
+  unique: true,
+  where: `"status" IN ('ACTIVE', 'WAITLISTED')`,
+})
 export class Registration {
   @PrimaryGeneratedColumn('uuid')
   id: string;

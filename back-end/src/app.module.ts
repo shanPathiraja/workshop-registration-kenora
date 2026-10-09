@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { buildDataSourceOptions } from './app-config/database.config.js';
 import { AuditModule } from './audit/audit.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { RegistrationsModule } from './registrations/registrations.module.js';
 import { UsersModule } from './users/users.module.js';
 import { WorkshopsModule } from './workshops/workshops.module.js';
 
@@ -27,6 +28,7 @@ import { WorkshopsModule } from './workshops/workshops.module.js';
     UsersModule,
     AuditModule,
     WorkshopsModule,
+    RegistrationsModule,
   ],
 })
 export class AppModule {}
