@@ -5,6 +5,7 @@ import { useForm } from '@mantine/form'
 import { zodResolver } from 'mantine-form-zod-resolver'
 import { z } from 'zod'
 import { ApiError } from '../api/client'
+import { landingPath } from '../auth/landing'
 import { useAuth } from '../hooks/useAuth'
 
 const loginSchema = z.object({
@@ -23,14 +24,14 @@ export function LoginPage() {
     validate: zodResolver(loginSchema),
   })
 
-  if (user) return <Navigate to="/" replace />
+  if (user) return <Navigate to={landingPath(user.role)} replace />
 
   const handleSubmit = form.onSubmit(async ({ email, password }) => {
     setError(null)
     setSubmitting(true)
     try {
-      await login(email, password)
-      navigate('/', { replace: true })
+      const loggedIn = await login(email, password)
+      navigate(landingPath(loggedIn.role), { replace: true })
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Something went wrong. Please try again.')
     } finally {
@@ -39,7 +40,7 @@ export function LoginPage() {
   })
 
   return (
-    <Container size={420} my={60}>
+    <Container size={420} className="flex min-h-svh flex-col justify-center py-10">
       <Title ta="center" mb="lg">
         Sign in
       </Title>
