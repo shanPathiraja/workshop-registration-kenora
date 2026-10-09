@@ -6,6 +6,7 @@ import { RequireAuth } from './components/RequireAuth'
 import { RequireRole } from './components/RequireRole'
 import { useAuth } from './hooks/useAuth'
 import { LoginPage } from './pages/LoginPage'
+import { UsersPage } from './pages/UsersPage'
 
 function HomeRedirect() {
   const { user } = useAuth()
@@ -22,7 +23,7 @@ function App() {
         <Route element={<AppLayout />}>
           <Route index element={<HomeRedirect />} />
           <Route element={<RequireRole roles={['admin']} />}>
-            <Route path="users" element={<Placeholder title="Users" />} />
+            <Route path="users" element={<UsersPage />} />
           </Route>
           <Route element={<RequireRole roles={['manager', 'staff']} />}>
             <Route path="workshops" element={<Placeholder title="Workshops" />} />

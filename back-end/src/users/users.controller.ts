@@ -9,11 +9,11 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { Roles } from '../auth/decorators.js';
+import { CurrentUser, Roles, type AuthUser } from '../auth/decorators.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
-import type { User } from './user.entity.js';
-import { UsersService, type PublicUser } from './users.service.js';
+import { UserResponseDto } from './dto/user-response.dto.js';
+import { UsersService } from './users.service.js';
 
 @Roles('admin')
 @Controller('users')
@@ -21,31 +21,40 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() dto: CreateUserDto): Promise<PublicUser> {
-    return this.usersService.create(dto);
+  async create(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
+    return UserResponseDto.fromEntity(await this.usersService.create(dto));
   }
 
   @Get()
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
+  async findAll(): Promise<UserResponseDto[]> {
+    const users = await this.usersService.findAll();
+    return users.map((user) => UserResponseDto.fromEntity(user));
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
-    return this.usersService.findOne(id);
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<UserResponseDto> {
+    return UserResponseDto.fromEntity(await this.usersService.findOne(id));
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateUserDto,
-  ): Promise<PublicUser> {
-    return this.usersService.update(id, dto);
+    @CurrentUser() authUser: AuthUser,
+  ): Promise<UserResponseDto> {
+    return UserResponseDto.fromEntity(
+      await this.usersService.update(id, dto, authUser.id),
+    );
   }
 
   @Delete(':id')
   @HttpCode(204)
-  deactivate(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.usersService.deactivate(id);
+  deactivate(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() authUser: AuthUser,
+  ): Promise<void> {
+    return this.usersService.deactivate(id, authUser.id);
   }
 }

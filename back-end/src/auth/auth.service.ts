@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
 import { Repository } from 'typeorm';
 import { User } from '../users/user.entity.js';
-import { toPublicUser } from '../users/users.service.js';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +12,10 @@ export class AuthService {
     @InjectRepository(User) private readonly users: Repository<User>,
   ) {}
 
-  async login(email: string, password: string) {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ accessToken: string; user: User }> {
     const user = await this.users
       .createQueryBuilder('u')
       .addSelect('u.passwordHash')
@@ -27,6 +29,12 @@ export class AuthService {
     }
 
     const accessToken = await this.jwt.signAsync({ sub: user.id });
-    return { accessToken, user: toPublicUser(user) };
+    return { accessToken, user };
+  }
+
+  async me(id: string): Promise<User> {
+    const user = await this.users.findOneBy({ id });
+    if (!user) throw new UnauthorizedException('Please sign in');
+    return user;
   }
 }

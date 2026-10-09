@@ -2,6 +2,8 @@ import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ROLES } from '../users/user.entity.js';
 import { AuthService } from './auth.service.js';
 import { CurrentUser, Public, Roles, type AuthUser } from './decorators.js';
+import { UserResponseDto } from '../users/dto/user-response.dto.js';
+import { LoginResponseDto } from './dto/login-response.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 
 @Controller('auth')
@@ -11,13 +13,17 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(200)
-  login(@Body() dto: LoginDto) {
-    return this.auth.login(dto.email, dto.password);
+  async login(@Body() dto: LoginDto): Promise<LoginResponseDto> {
+    const { accessToken, user } = await this.auth.login(
+      dto.email,
+      dto.password,
+    );
+    return LoginResponseDto.from(accessToken, user);
   }
 
   @Roles(...ROLES)
   @Get('me')
-  me(@CurrentUser() user: AuthUser): AuthUser {
-    return user;
+  async me(@CurrentUser() user: AuthUser): Promise<UserResponseDto> {
+    return UserResponseDto.fromEntity(await this.auth.me(user.id));
   }
 }
