@@ -6,6 +6,7 @@ import { RequireAuth } from './components/RequireAuth'
 import { RequireRole } from './components/RequireRole'
 import { useAuth } from './hooks/useAuth'
 import { LoginPage } from './pages/LoginPage'
+import { ActivityPage } from './pages/ActivityPage'
 import { UsersPage } from './pages/UsersPage'
 
 function HomeRedirect() {
@@ -29,7 +30,7 @@ function App() {
             <Route path="workshops" element={<Placeholder title="Workshops" />} />
           </Route>
           <Route element={<RequireRole roles={['admin', 'manager']} />}>
-            <Route path="activity" element={<Placeholder title="Activity" />} />
+            <Route path="activity" element={<ActivityPage />} />
           </Route>
           <Route path="*" element={<Text>Page not found</Text>} />
         </Route>

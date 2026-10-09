@@ -21,8 +21,13 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async create(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
-    return UserResponseDto.fromEntity(await this.usersService.create(dto));
+  async create(
+    @Body() dto: CreateUserDto,
+    @CurrentUser() authUser: AuthUser,
+  ): Promise<UserResponseDto> {
+    return UserResponseDto.fromEntity(
+      await this.usersService.create(dto, authUser.id),
+    );
   }
 
   @Get()
