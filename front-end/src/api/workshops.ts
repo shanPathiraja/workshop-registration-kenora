@@ -7,6 +7,7 @@ export interface WorkshopFilters extends PageParams {
   status?: WorkshopStatus
   from?: string
   to?: string
+  hasSeats?: boolean
 }
 
 export interface WorkshopBody {

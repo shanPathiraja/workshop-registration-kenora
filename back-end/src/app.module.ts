@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { buildDataSourceOptions } from './app-config/database.config.js';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
+import { AuthModule } from './auth/auth.module.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
@@ -22,9 +21,8 @@ import { UsersModule } from './users/users.module.js';
         autoLoadEntities: true,
       }),
     }),
+    AuthModule,
     UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

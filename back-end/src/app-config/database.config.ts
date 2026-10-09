@@ -16,5 +16,5 @@ export const buildDataSourceOptions = (
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
   entities,
-  synchronize: false,
+  synchronize: true,
 });

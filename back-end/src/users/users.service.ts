@@ -51,8 +51,10 @@ export class UsersService {
     return toPublicUser(await this.usersRepository.save(user));
   }
 
-  async remove(id: string): Promise<void> {
+  /** Soft delete: keeps the row (registrations and audit logs reference it). */
+  async deactivate(id: string): Promise<void> {
     const user = await this.findOne(id);
-    await this.usersRepository.remove(user);
+    user.isActive = false;
+    await this.usersRepository.save(user);
   }
 }

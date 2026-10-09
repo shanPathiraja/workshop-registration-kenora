@@ -20,4 +20,5 @@ export const createUser = (body: CreateUserBody) =>
 export const updateUser = (id: string, body: UpdateUserBody) =>
   api<User>(`/users/${id}`, { method: 'PATCH', body })
 
-export const deleteUser = (id: string) => api<void>(`/users/${id}`, { method: 'DELETE' })
+/** DELETE /users/:id soft-deactivates the account (isActive = false); it does not remove the row. */
+export const deactivateUser = (id: string) => api<void>(`/users/${id}`, { method: 'DELETE' })

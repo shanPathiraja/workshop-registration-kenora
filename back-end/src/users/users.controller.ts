@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Roles } from '../auth/decorators.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
-import type { UpdateUserDto } from './dto/update-user.dto.js';
+import { UpdateUserDto } from './dto/update-user.dto.js';
 import type { User } from './user.entity.js';
 import { UsersService, type PublicUser } from './users.service.js';
 
@@ -45,7 +45,7 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.usersService.remove(id);
+  deactivate(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return this.usersService.deactivate(id);
   }
 }
