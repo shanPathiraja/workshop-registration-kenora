@@ -1,4 +1,4 @@
-import { Text, Title } from '@mantine/core'
+import { Text } from '@mantine/core'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { landingPath } from './auth/landing'
 import { AppLayout } from './components/AppLayout'
@@ -8,13 +8,12 @@ import { useAuth } from './hooks/useAuth'
 import { LoginPage } from './pages/LoginPage'
 import { ActivityPage } from './pages/ActivityPage'
 import { UsersPage } from './pages/UsersPage'
+import { WorkshopsPage } from './pages/WorkshopsPage'
 
 function HomeRedirect() {
   const { user } = useAuth()
   return <Navigate to={user ? landingPath(user.role) : '/login'} replace />
 }
-
-const Placeholder = ({ title }: { title: string }) => <Title order={2}>{title}</Title>
 
 function App() {
   return (
@@ -27,7 +26,7 @@ function App() {
             <Route path="users" element={<UsersPage />} />
           </Route>
           <Route element={<RequireRole roles={['manager', 'staff']} />}>
-            <Route path="workshops" element={<Placeholder title="Workshops" />} />
+            <Route path="workshops" element={<WorkshopsPage />} />
           </Route>
           <Route element={<RequireRole roles={['admin', 'manager']} />}>
             <Route path="activity" element={<ActivityPage />} />

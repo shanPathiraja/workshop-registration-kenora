@@ -1,7 +1,9 @@
 import {
+  Check,
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -16,10 +18,17 @@ export enum WorkshopStatus {
 }
 
 @Entity('workshops')
+@Check(
+  'workshops_seats_within_capacity',
+  '"active_count" >= 0 AND "active_count" <= "capacity"',
+)
+@Check('workshops_capacity_positive', '"capacity" > 0')
+@Check('workshops_ends_after_start', '"ends_at" > "starts_at"')
 export class Workshop {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index('workshops_code_uq', { unique: true })
   @Column()
   code: string;
 
@@ -44,11 +53,6 @@ export class Workshop {
   @Column({ type: 'int' })
   capacity: number;
 
-  /**
-   * Denormalised count of ACTIVE registrations. Only ever changed inside a
-   * transaction that holds a row lock on this workshop, and guarded by the
-   * CHECK constraint `active_count <= capacity` in the database.
-   */
   @Column({ name: 'active_count', type: 'int', default: 0 })
   activeCount: number;
 

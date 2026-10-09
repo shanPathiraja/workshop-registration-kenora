@@ -5,6 +5,7 @@ import { buildDataSourceOptions } from './app-config/database.config.js';
 import { AuditModule } from './audit/audit.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { UsersModule } from './users/users.module.js';
+import { WorkshopsModule } from './workshops/workshops.module.js';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UsersModule } from './users/users.module.js';
     AuthModule,
     UsersModule,
     AuditModule,
+    WorkshopsModule,
   ],
 })
 export class AppModule {}
