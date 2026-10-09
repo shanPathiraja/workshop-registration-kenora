@@ -8,6 +8,7 @@ const SEED_USERS: {
   email: string;
   password: string;
   role: Role;
+  isActive?: boolean;
 }[] = [
   {
     name: process.env.SEED_ADMIN_NAME ?? 'Admin',
@@ -27,6 +28,39 @@ const SEED_USERS: {
     password: 'Staff@123',
     role: 'staff',
   },
+  {
+    name: 'Omar Programme',
+    email: 'omar.manager@kenora.dev',
+    password: 'Manager@123',
+    role: 'manager',
+  },
+  // Several front-desk staff, to try registering for the same workshop at once.
+  {
+    name: 'Priya Front Desk',
+    email: 'priya.staff@kenora.dev',
+    password: 'Staff@123',
+    role: 'staff',
+  },
+  {
+    name: 'Leo Front Desk',
+    email: 'leo.staff@kenora.dev',
+    password: 'Staff@123',
+    role: 'staff',
+  },
+  {
+    name: 'Nina Front Desk',
+    email: 'nina.staff@kenora.dev',
+    password: 'Staff@123',
+    role: 'staff',
+  },
+  // Deactivated account: sign-in must be refused.
+  {
+    name: 'Former Staff',
+    email: 'former.staff@kenora.dev',
+    password: 'Staff@123',
+    role: 'staff',
+    isActive: false,
+  },
 ];
 
 async function seed() {
@@ -34,7 +68,7 @@ async function seed() {
   try {
     const users = dataSource.getRepository(User);
 
-    for (const { password, ...seedUser } of SEED_USERS) {
+    for (const { password, isActive = true, ...seedUser } of SEED_USERS) {
       const email = seedUser.email.toLowerCase();
       if (await users.findOneBy({ email })) {
         console.log(`User already exists: ${email}`);
@@ -45,7 +79,7 @@ async function seed() {
           ...seedUser,
           email,
           passwordHash: await bcrypt.hash(password, 12),
-          isActive: true,
+          isActive,
         }),
       );
       console.log(`Seeded ${seedUser.role}: ${email}`);
